@@ -1,4 +1,8 @@
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import logo from "./logo.svg";
+
 import "./App.css";
 import Ccomponent from "./components/Ccomponent";
 import Funtional from "./components/Funtional";
@@ -32,8 +36,28 @@ import UseRef from "./components/Hooks/UseRef";
 import UseLayout from "./components/Hooks/UseLayout";
 import UseCustomHook from "./components/Hooks/UseCustomHook";
 import LazyLoading from "./components/LazyLoading/LazyLoading";
+import Home from "./components/Router/Home";
+import About from "./components/Router/About";
+import Navbar from "./components/Router/Navbar";
+import Error from "./components/Router/Error";
+import Contact from "./components/Router/Contact";
+import Auth from "./components/Router/Auth";
+import Dashboard from "./components/Router/Dashboard";
+import Frontend from "./components/Router/FrontEnd/Frontend";
+import Backend from "./components/Router/BackEnd/Backend";
+import Admin from "./components/Router/Admin";
 
 function App() {
+  const [user, setUser] = useState(false);
+
+  useEffect(() => {
+    const user1 = localStorage.getItem("login", user);
+    user1 ? setUser(true) : setUser(false);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("login", user);
+  }, [user]);
   return (
     <div className="App">
       {/* <Ccomponent name="Class Component" age="100"></Ccomponent>
@@ -97,7 +121,51 @@ function App() {
       {/* <UseCustomHook></UseCustomHook> */}
 
       {/* //LazyLoading */}
-      <LazyLoading></LazyLoading>
+      {/* <LazyLoading></LazyLoading> */}
+
+      {/* //Routing */}
+      <Routes>
+        {!user && (
+          <Route path="/auth" element={<Auth auth={() => setUser(true)} />} />
+        )}
+        {user && (
+          <Route
+            path="/Dashboard"
+            element={<Dashboard logoutx={() => setUser(false)} />}
+          />
+        )}
+
+        <Route path="/frontend" element={<Frontend />}>
+          {/* //For Outlet */}
+          <Route index element={<Home />}></Route>
+        </Route>
+        <Route path="/backend" element={<Backend />}>
+          <Route index element={<Admin />}></Route>
+        </Route>
+
+        <Route path="/" element={<Navbar></Navbar>}>
+          <Route index element={<Home></Home>} />
+          <Route path="/about" element={<About></About>} />
+          <Route path="/about/:id" element={<About></About>} />
+
+          {/* //IF WE WANT TO ROUTE UNDER CHILD COMPONENT THEN USE /contact/* 
+          <Route path="/contact/*" element={<Contact></Contact>} /> */}
+        </Route>
+
+        {/* Trying nested routing */}
+        <Route path="/admin" element={<Navbar></Navbar>}>
+          <Route path="/admin" element={<Home></Home>} />
+          <Route path="/admin/about" element={<About></About>} />
+          <Route path="/admin/contact" element={<Contact></Contact>} />
+        </Route>
+
+        <Route
+          path="*"
+          element={<Navigate to={user ? "dashboard" : "auth"} />}
+        />
+
+        {/* <Route path="*" element={<Navigate to="/" />} /> */}
+      </Routes>
     </div>
   );
 }
