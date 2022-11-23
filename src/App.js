@@ -46,6 +46,8 @@ import Dashboard from "./components/Router/Dashboard";
 import Frontend from "./components/Router/FrontEnd/Frontend";
 import Backend from "./components/Router/BackEnd/Backend";
 import Admin from "./components/Router/Admin";
+import PlusMinus from "./components/Redux/PlusMinus";
+import PlusMinusClass from "./components/Redux/PlusMinusClass";
 
 function App() {
   const [user, setUser] = useState(false);
@@ -146,6 +148,11 @@ function App() {
         <Route path="/" element={<Navbar></Navbar>}>
           <Route index element={<Home></Home>} />
           <Route path="/about" element={<About></About>} />
+          <Route path="/plusminus" element={<PlusMinus></PlusMinus>} />
+          <Route
+            path="/plusminusclass"
+            element={<PlusMinusClass></PlusMinusClass>}
+          />
           <Route path="/about/:id" element={<About></About>} />
 
           {/* //IF WE WANT TO ROUTE UNDER CHILD COMPONENT THEN USE /contact/* 
